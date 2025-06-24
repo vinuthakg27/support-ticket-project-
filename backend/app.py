@@ -51,35 +51,40 @@ def token_required(f):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/signup', methods=['POST', 'OPTIONS'])
+@app.route('/signup', methods=['POST'])
 def signup():
-    if request.method == 'OPTIONS':
-        # Handles CORS preflight
-        return jsonify({'status': 'ok'}), 200
-
-    data = request.json
-    conn = get_db_connection()
-    cursor = conn.cursor()
     try:
+        data = request.json
         name = data.get('name')
         email = data.get('email')
         password = data.get('password')
+
         if not name or not email or not password:
             return jsonify({'message': 'Missing required fields'}), 400
 
         password_hash = generate_password_hash(password)
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)",
             (name, email, password_hash)
         )
         conn.commit()
+
         return jsonify({'message': 'Signup successful'}), 201
-    except mysql.connector.Error as err:
-        print("Database error:", err)
-        return jsonify({'message': 'Signup failed'}), 500
+
+    except Exception as e:
+        print("🔥 SIGNUP ERROR:", e)
+        return jsonify({'message': 'Signup failed', 'error': str(e)}), 500
+
     finally:
-        cursor.close()
-        conn.close()
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            pass
+
 
 # Login
 @app.route('/login', methods=['POST'])
