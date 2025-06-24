@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, join_room, emit
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["https://support-ticket-project.vercel.app", "http://localhost:3000"]}})
+CORS(app, resources={r"/*": {"origins": ["https://support-ticket-project.vercel.app", "http://localhost:3000"]}}, supports_credentials=True)
 
 
 # Socket.IO init
@@ -51,9 +51,12 @@ def token_required(f):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Signup
-@app.route('/signup', methods=['POST'])
+@app.route('/signup', methods=['POST', 'OPTIONS'])
 def signup():
+    if request.method == 'OPTIONS':
+        # Handles CORS preflight
+        return jsonify({'status': 'ok'}), 200
+
     data = request.json
     conn = get_db_connection()
     cursor = conn.cursor()
