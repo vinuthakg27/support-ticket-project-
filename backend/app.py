@@ -1,5 +1,4 @@
-import eventlet
-eventlet.monkey_patch()
+
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -16,8 +15,12 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://support-ticket-project.vercel.app"}})
 
 
-# Socket.IO init
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+
+
+socketio = SocketIO(app, cors_allowed_origins=[
+    "https://support-ticket-project.vercel.app"
+])
+
 
 SECRET_KEY = 'your_secret_key'
 
