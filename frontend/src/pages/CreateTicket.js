@@ -22,7 +22,7 @@ function CreateTicket() {
       formData.append('description', description);
       if (image) formData.append('image', image);
 
-      await axios.post('http://localhost:5000/api/tickets/', formData, {
+      await axios.post('https://support-ticket-project.onrender.com/api/tickets/', formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data'

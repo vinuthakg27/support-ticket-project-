@@ -10,7 +10,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const handleSignup = () => {
-    axios.post('http://localhost:5000/signup', { name, email, password })
+    axios.post('https://support-ticket-project.onrender.com/signup', { name, email, password })
       .then(res => {
         alert(res.data.message);
         navigate('/');

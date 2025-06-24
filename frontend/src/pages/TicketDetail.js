@@ -23,7 +23,7 @@ function TicketDetail() {
   };
 
   const loadReplies = async () => {
-    const res = await axios.get(`http://localhost:5000/api/tickets/${id}/replies`, {
+    const res = await axios.get(`https://support-ticket-project.onrender.com/api/tickets/${id}/replies`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
     setReplies(res.data);
@@ -34,14 +34,14 @@ function TicketDetail() {
   setIsAdmin(token.is_admin);
 
   const fetchData = async () => {
-    const ticketRes = await axios.get('http://localhost:5000/api/tickets/', {
+    const ticketRes = await axios.get('https://support-ticket-project.onrender.com/api/tickets/', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
     const current = ticketRes.data.find(t => t.id === parseInt(id));
     setTicket(current);
     setNewStatus(current.status);
 
-    const replyRes = await axios.get(`http://localhost:5000/api/tickets/${id}/replies`, {
+    const replyRes = await axios.get(`https://support-ticket-project.onrender.com/api/tickets/${id}/replies`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
     setReplies(replyRes.data);
@@ -55,7 +55,7 @@ function TicketDetail() {
 
 const loadChat = async () => {
   try {
-    const res = await axios.get(`http://localhost:5000/chat/${id}`, {
+    const res = await axios.get(`https://support-ticket-project.onrender.com/chat/${id}`, {
       headers: { 'x-access-token': localStorage.getItem('token') }
     });
     setChatMessages(res.data);
@@ -66,7 +66,7 @@ const loadChat = async () => {
 
 const sendChat = async () => {
   try {
-    await axios.post(`http://localhost:5000/chat/send`, {
+    await axios.post(`https://support-ticket-project.onrender.com/chat/send`, {
       ticket_id: id,
       message: chatInput
     }, {
@@ -82,7 +82,7 @@ const sendChat = async () => {
 
 
   const sendReply = async () => {
-    await axios.post(`http://localhost:5000/api/tickets/${id}/reply`, {
+    await axios.post(`https://support-ticket-project.onrender.com/api/tickets/${id}/reply`, {
       message
     }, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -92,7 +92,7 @@ const sendChat = async () => {
   };
 
   const updateStatus = async () => {
-    await axios.patch(`http://localhost:5000/api/tickets/${id}/status`, {
+    await axios.patch(`https://support-ticket-project.onrender.com/api/tickets/${id}/status`, {
       status: newStatus
     }, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -109,7 +109,7 @@ const sendChat = async () => {
       <p>Description: {ticket.description}</p>
       <p>Status: {ticket.status}</p>
       {ticket.image && (
-        <img src={`http://localhost:5000/static/uploads/${ticket.image}`} alt="attachment" className="mt-2 w-64" />
+        <img src={`https://support-ticket-project.onrender.com/static/uploads/${ticket.image}`} alt="attachment" className="mt-2 w-64" />
       )}
 
       {isAdmin && (

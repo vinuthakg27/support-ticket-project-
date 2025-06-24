@@ -11,7 +11,7 @@ const Chat = ({ ticketId, sender }) => {
   useEffect(() => {
     if (!ticketId || !token) return;
 
-    axios.get(`http://localhost:5000/chat/${ticketId}`, {
+    axios.get(`https://support-ticket-project.onrender.com/chat/${ticketId}`, {
       headers: { 'x-access-token': token }
     }).then(res => {
       setMessages(res.data);

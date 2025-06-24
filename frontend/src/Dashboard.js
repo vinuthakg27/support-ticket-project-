@@ -17,7 +17,7 @@ function Dashboard() {
 
   const fetchTickets = () => {
     axios
-      .get('http://localhost:5000/tickets', {
+      .get('https://support-ticket-project.onrender.com/tickets', {
         headers: {
           'x-access-token': token,
         },
@@ -37,7 +37,7 @@ function Dashboard() {
     }
 
     try {
-      await axios.post('http://localhost:5000/tickets', formData, {
+      await axios.post('https://support-ticket-project.onrender.com/tickets', formData, {
         headers: {
           'x-access-token': token,
           'Content-Type': 'multipart/form-data',
@@ -98,7 +98,7 @@ function Dashboard() {
                 <td>
                   {ticket.attachment ? (
                     <a
-                      href={`http://localhost:5000/uploads/${ticket.attachment}`}
+                      href={`https://support-ticket-project.onrender.com/uploads/${ticket.attachment}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

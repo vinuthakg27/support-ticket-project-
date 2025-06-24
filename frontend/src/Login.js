@@ -9,7 +9,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    axios.post('http://localhost:5000/login', { email, password })
+    axios.post('https://support-ticket-project.onrender.com/login', { email, password })
       .then(res => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));

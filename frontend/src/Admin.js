@@ -9,7 +9,7 @@ function Admin() {
   const [expandedTicketId, setExpandedTicketId] = useState(null);
 
   const fetchTickets = useCallback(() => {
-    axios.get('http://localhost:5000/admin/tickets')
+    axios.get('https://support-ticket-project.onrender.com/admin/tickets')
       .then(res => setTickets(res.data));
   }, []);
 
@@ -18,7 +18,7 @@ function Admin() {
   }, [fetchTickets]);
 
   const updateStatus = (id, status) => {
-    axios.put('http://localhost:5000/admin/ticket/status', {
+    axios.put('https://support-ticket-project.onrender.com/admin/ticket/status', {
       ticket_id: id,
       status
     }).then(fetchTickets);
@@ -71,7 +71,7 @@ function Admin() {
                   <td>
                     {ticket.attachment && (
                       <img
-                        src={`http://localhost:5000/uploads/${ticket.attachment}`}
+                        src={`https://support-ticket-project.onrender.com/uploads/${ticket.attachment}`}
                         alt="attachment"
                         className="ticket-img"
                       />
