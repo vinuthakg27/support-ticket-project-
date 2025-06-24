@@ -13,7 +13,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, join_room, emit
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": ["https://support-ticket-project.vercel.app", "http://localhost:3000"]}})
+
 
 # Socket.IO init
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
