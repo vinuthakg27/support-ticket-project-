@@ -1,5 +1,3 @@
-
-
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import mysql.connector
@@ -14,13 +12,9 @@ from flask_socketio import SocketIO, join_room, emit
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://support-ticket-project.vercel.app"}})
 
-
-
-
 socketio = SocketIO(app, cors_allowed_origins=[
     "https://support-ticket-project.vercel.app"
 ])
-
 
 SECRET_KEY = 'your_secret_key'
 
@@ -29,13 +23,15 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 def get_db_connection():
     return mysql.connector.connect(
-        host="mysql-xxxx.render.com",
+        host="mysql-xxxx.render.com",  # ✅ Replace with your actual Render MySQL hostname
         user="root",
         password="Vinutha@123",
         database="support_system"
     )
+
 
 def token_required(f):
     @wraps(f)
@@ -51,8 +47,10 @@ def token_required(f):
         return f(current_user_id, *args, **kwargs)
     return decorated
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -89,7 +87,6 @@ def signup():
             pass
 
 
-# Login
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -117,7 +114,7 @@ def login():
     user.pop('password_hash', None)
     return jsonify({'token': token, 'user': user})
 
-# Create ticket (with file)
+
 @app.route('/tickets', methods=['POST'])
 @token_required
 def create_ticket(current_user_id):
@@ -139,7 +136,7 @@ def create_ticket(current_user_id):
     conn.close()
     return jsonify({"message": "Ticket created"})
 
-# Get user tickets
+
 @app.route('/tickets', methods=['GET'])
 @token_required
 def get_user_tickets(current_user_id):
@@ -151,7 +148,7 @@ def get_user_tickets(current_user_id):
     conn.close()
     return jsonify(result)
 
-# Get all tickets (admin)
+
 @app.route('/admin/tickets', methods=['GET'])
 def get_all_tickets():
     conn = get_db_connection()
@@ -162,7 +159,7 @@ def get_all_tickets():
     conn.close()
     return jsonify(result)
 
-# Update ticket status (admin)
+
 @app.route('/admin/ticket/status', methods=['PUT'])
 def update_status():
     data = request.json
@@ -174,12 +171,12 @@ def update_status():
     conn.close()
     return jsonify({"message": "Status updated"})
 
-# Serve uploaded files
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# Get chat messages
+
 @app.route('/messages/<int:ticket_id>', methods=['GET'])
 def get_messages(ticket_id):
     conn = get_db_connection()
@@ -190,7 +187,7 @@ def get_messages(ticket_id):
     conn.close()
     return jsonify(messages)
 
-# Post chat message
+
 @app.route('/messages', methods=['POST'])
 def send_message():
     data = request.get_json()
@@ -216,7 +213,7 @@ def send_message():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Socket.IO events
+
 @socketio.on('joinRoom')
 def on_join_room(data):
     ticket_id = str(data['ticketId'])
@@ -230,6 +227,7 @@ def on_join_room(data):
     cursor.close()
     conn.close()
     emit('chatHistory', messages)
+
 
 @socketio.on('chatMessage')
 def on_chat_message(data):
@@ -252,6 +250,8 @@ def on_chat_message(data):
 
     emit('chatMessage', {'sender': sender, 'message': message}, room=ticket_id)
 
-# 🔥 Start server
+
+# 🔥 Start server (ONLY HERE)
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    socketio.run(app, host='0.0.0.0', port=port)
