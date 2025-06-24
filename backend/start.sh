@@ -1,2 +1,3 @@
 #!/bin/bash
-gunicorn -w 1 -k gthread app:app
+#!/bin/bash
+gunicorn --worker-class eventlet -w 1 app:app
